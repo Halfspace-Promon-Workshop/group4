@@ -1,4 +1,5 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { BrowserRouter, Routes, Route, useNavigate, useLocation } from 'react-router-dom'
 import Header from './components/Header'
 import InputSelector from './components/InputSelector'
 import DescriptionInput from './components/DescriptionInput'
@@ -6,10 +7,13 @@ import APKUpload from './components/APKUpload'
 import RoleSelector from './components/RoleSelector'
 import AnalysisProgress from './components/AnalysisProgress'
 import SecurityBrief from './components/SecurityBrief'
+import AnalysisHistory from './components/AnalysisHistory'
+import InsightDashboard from './components/insight/InsightDashboard'
 import { analyzeDescription, analyzeAPK } from './api/analyze'
+import { saveAnalysis, getAnalysisHistory } from './utils/analysisHistory'
 
-function App() {
-  const [inputMode, setInputMode] = useState('description') // 'description' or 'apk'
+function MainApp() {
+  const [inputMode, setInputMode] = useState('description')
   const [description, setDescription] = useState('')
   const [appName, setAppName] = useState('')
   const [apkFile, setApkFile] = useState(null)
@@ -18,13 +22,30 @@ function App() {
   const [stages, setStages] = useState([])
   const [result, setResult] = useState(null)
   const [error, setError] = useState(null)
+  const [showHistory, setShowHistory] = useState(false)
+  
+  const navigate = useNavigate()
+  const location = useLocation()
+  
+  // Check if we're coming back from Insight with a result to view
+  useEffect(() => {
+    if (location.state?.result && location.state?.viewResult) {
+      setResult(location.state.result)
+      // Clear the state so refresh shows the form
+      window.history.replaceState({}, document.title)
+      // Scroll to top
+      window.scrollTo(0, 0)
+    }
+  }, [location.state])
+  
+  // Check if there's history
+  const hasHistory = getAnalysisHistory().length > 0
 
   const handleAnalyze = async () => {
     setIsAnalyzing(true)
     setError(null)
     setResult(null)
     
-    // Initialize stages
     setStages([
       { stage: 1, name: 'Inferring Capabilities', status: 'pending' },
       { stage: 2, name: 'Analyzing Attack Surface', status: 'pending' },
@@ -35,7 +56,6 @@ function App() {
     try {
       let response
       
-      // Simulate stage progression (since we don't have real-time updates from backend)
       const simulateStages = async () => {
         for (let i = 1; i <= 4; i++) {
           setStages(prev => prev.map(s => 
@@ -46,7 +66,6 @@ function App() {
         }
       }
       
-      // Start stage simulation and API call in parallel
       const stagePromise = simulateStages()
       
       if (inputMode === 'description') {
@@ -55,12 +74,13 @@ function App() {
         response = await analyzeAPK(apkFile, appName || undefined, targetAudience)
       }
       
-      // Wait for simulation to complete
       await stagePromise
       
-      // Mark all as completed
       setStages(prev => prev.map(s => ({ ...s, status: 'completed' })))
       setResult(response)
+      
+      // Save to history
+      saveAnalysis(response)
       
     } catch (err) {
       setError(err.response?.data?.detail || err.message || 'Analysis failed')
@@ -80,6 +100,17 @@ function App() {
     setResult(null)
     setStages([])
     setError(null)
+    window.scrollTo(0, 0)
+  }
+  
+  const handleViewInsight = () => {
+    navigate('/insight', { state: { result } })
+  }
+  
+  const handleSelectFromHistory = (selectedResult) => {
+    setResult(selectedResult)
+    setShowHistory(false)
+    window.scrollTo(0, 0)
   }
 
   return (
@@ -88,6 +119,22 @@ function App() {
       
       {!result && (
         <>
+          {/* History Button */}
+          {hasHistory && (
+            <div className="history-button-container">
+              <button 
+                className="btn btn--secondary history-button"
+                onClick={() => setShowHistory(true)}
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <circle cx="12" cy="12" r="10"/>
+                  <polyline points="12 6 12 12 16 14"/>
+                </svg>
+                View Previous Analyses
+              </button>
+            </div>
+          )}
+          
           <InputSelector 
             mode={inputMode} 
             onChange={setInputMode} 
@@ -143,9 +190,29 @@ function App() {
         <SecurityBrief 
           result={result} 
           onReset={handleReset}
+          onViewInsight={handleViewInsight}
+        />
+      )}
+      
+      {/* History Modal */}
+      {showHistory && (
+        <AnalysisHistory 
+          onSelectAnalysis={handleSelectFromHistory}
+          onClose={() => setShowHistory(false)}
         />
       )}
     </div>
+  )
+}
+
+function App() {
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<MainApp />} />
+        <Route path="/insight" element={<InsightDashboard />} />
+      </Routes>
+    </BrowserRouter>
   )
 }
 

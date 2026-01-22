@@ -1,7 +1,7 @@
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 
-function SecurityBrief({ result, onReset }) {
+function SecurityBrief({ result, onReset, onViewInsight }) {
   // Extract recommended products from the promon_mapping
   const recommendedProducts = result.promon_mapping?.recommended_products || null
   
@@ -37,13 +37,11 @@ function SecurityBrief({ result, onReset }) {
           <ReactMarkdown
             remarkPlugins={[remarkGfm]}
             components={{
-              // Custom table rendering for better styling
               table: ({ children }) => (
                 <div style={{ overflowX: 'auto' }}>
                   <table>{children}</table>
                 </div>
               ),
-              // Ensure links open in new tab
               a: ({ href, children }) => (
                 <a href={href} target="_blank" rel="noopener noreferrer">
                   {children}
@@ -154,6 +152,30 @@ function SecurityBrief({ result, onReset }) {
           )}
         </div>
       )}
+      
+      {/* View in Insight CTA */}
+      <div className="insight-cta">
+        <div className="insight-cta__content">
+          <div className="insight-cta__icon">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+              <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+            </svg>
+          </div>
+          <div className="insight-cta__text">
+            <h3>See How This Compares to Real Threats</h3>
+            <p>
+              View your analysis in Promon Insight to see how your app's vulnerabilities 
+              correlate with threats we detect across {(67370).toLocaleString()} protected app instances.
+            </p>
+          </div>
+          <button className="btn btn--primary btn--large" onClick={onViewInsight}>
+            View in Promon Insight
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M5 12h14M12 5l7 7-7 7"/>
+            </svg>
+          </button>
+        </div>
+      </div>
       
       {/* Analysis Metadata */}
       <div className="analysis-details">

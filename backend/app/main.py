@@ -4,7 +4,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.config import settings
-from app.routers import analyze
+from app.routers import analyze, search
 
 app = FastAPI(
     title="Promon Mobile Threat Translator",
@@ -23,6 +23,7 @@ app.add_middleware(
 
 # Include routers
 app.include_router(analyze.router, prefix="/api")
+app.include_router(search.router, prefix="/api")
 
 
 @app.get("/api/health")

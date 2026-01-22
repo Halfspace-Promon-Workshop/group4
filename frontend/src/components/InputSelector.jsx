@@ -17,6 +17,14 @@ function InputSelector({ mode, onChange, disabled }) {
         <span>📦</span>
         Upload APK
       </button>
+      <button
+        className={`input-selector__btn ${mode === 'search' ? 'input-selector__btn--active' : ''}`}
+        onClick={() => onChange('search')}
+        disabled={disabled}
+      >
+        <span>🔍</span>
+        Search Play Store
+      </button>
     </div>
   )
 }

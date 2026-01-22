@@ -68,3 +68,26 @@ export async function checkHealth() {
   const response = await axios.get(`${API_BASE}/health`)
   return response.data
 }
+
+/**
+ * Search for apps on Google Play Store
+ * @param {string} query - Search query (app name or package ID)
+ * @param {number} [limit=10] - Maximum number of results
+ * @returns {Promise<Array>} Array of app summaries
+ */
+export async function searchPlayStore(query, limit = 10) {
+  const response = await axios.get(`${API_BASE}/search/playstore`, {
+    params: { q: query, limit }
+  })
+  return response.data
+}
+
+/**
+ * Get detailed information about a Play Store app
+ * @param {string} appId - Package ID (e.g., "com.instagram.android")
+ * @returns {Promise<Object>} App details including full description
+ */
+export async function getPlayStoreApp(appId) {
+  const response = await axios.get(`${API_BASE}/search/playstore/${encodeURIComponent(appId)}`)
+  return response.data
+}

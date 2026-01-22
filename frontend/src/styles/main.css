@@ -2295,6 +2295,370 @@ input[type="text"]::placeholder {
   border-color: var(--text-muted);
 }
 
+/* Play Store Search */
+.playstore-search {
+  width: 100%;
+}
+
+.playstore-search__input-wrapper {
+  position: relative;
+}
+
+.playstore-search__input {
+  padding-right: 3rem;
+}
+
+.playstore-search__spinner {
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.playstore-search__error {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: var(--radius-md);
+  padding: 1rem;
+  margin-top: 1rem;
+  color: var(--risk-critical);
+  font-size: 0.875rem;
+}
+
+.playstore-search__loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 2rem;
+  color: var(--text-muted);
+}
+
+.playstore-search__empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 2rem;
+  text-align: center;
+  color: var(--text-muted);
+}
+
+.playstore-search__empty svg {
+  margin-bottom: 1rem;
+  opacity: 0.5;
+}
+
+.playstore-search__empty p {
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  margin-bottom: 0.25rem;
+}
+
+.playstore-search__empty span {
+  font-size: 0.875rem;
+}
+
+.playstore-search__hint {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 2rem;
+  text-align: center;
+  color: var(--text-muted);
+}
+
+.playstore-search__hint svg {
+  margin-bottom: 1.5rem;
+  opacity: 0.4;
+}
+
+.playstore-search__hint h4 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
+}
+
+.playstore-search__hint p {
+  font-size: 0.9375rem;
+  color: var(--text-secondary);
+  max-width: 400px;
+  line-height: 1.5;
+}
+
+.playstore-search__examples {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  font-size: 0.8125rem;
+}
+
+.playstore-search__examples span {
+  color: var(--text-muted);
+}
+
+.playstore-search__examples code {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  padding: 0.25rem 0.5rem;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--accent-primary);
+}
+
+.playstore-search__results {
+  margin-top: 1.5rem;
+}
+
+.playstore-search__results-header {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  margin-bottom: 1rem;
+}
+
+.playstore-search__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1rem;
+}
+
+.playstore-search__footer {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border-color);
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* Play Store App Card */
+.playstore-app-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1rem;
+  background: var(--bg-tertiary);
+  border: 2px solid var(--border-color);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: left;
+  width: 100%;
+}
+
+.playstore-app-card:hover {
+  border-color: var(--accent-primary);
+  background: var(--accent-light);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.playstore-app-card:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.playstore-app-card__icon {
+  width: 56px;
+  height: 56px;
+  border-radius: var(--radius-md);
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.playstore-app-card__info {
+  flex: 1;
+  min-width: 0;
+}
+
+.playstore-app-card__title {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 0.25rem 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.playstore-app-card__developer {
+  font-size: 0.8125rem;
+  color: var(--text-muted);
+  margin: 0 0 0.5rem 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.playstore-app-card__rating {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  font-size: 0.8125rem;
+  color: var(--text-secondary);
+}
+
+/* Stars */
+.star {
+  color: #d1d5db;
+}
+
+.star--filled {
+  color: #fbbf24;
+}
+
+.star--half {
+  background: linear-gradient(90deg, #fbbf24 50%, #d1d5db 50%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Play Store Rating */
+.playstore-rating {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.playstore-rating__value {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  margin-left: 0.25rem;
+}
+
+/* Selected App */
+.playstore-selected {
+  width: 100%;
+}
+
+.playstore-selected__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.playstore-selected__header h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.playstore-selected__change {
+  background: none;
+  border: none;
+  color: var(--accent-primary);
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: var(--radius-sm);
+  transition: background 0.2s;
+}
+
+.playstore-selected__change:hover {
+  background: var(--accent-light);
+}
+
+.playstore-selected__change:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.playstore-selected__app {
+  display: flex;
+  gap: 1.25rem;
+  padding: 1.5rem;
+  background: var(--accent-light);
+  border: 2px solid var(--accent-primary);
+  border-radius: var(--radius-lg);
+  margin-bottom: 1.5rem;
+}
+
+.playstore-selected__icon {
+  width: 80px;
+  height: 80px;
+  border-radius: var(--radius-md);
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.playstore-selected__info {
+  flex: 1;
+  min-width: 0;
+}
+
+.playstore-selected__title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 0.25rem 0;
+}
+
+.playstore-selected__developer {
+  font-size: 0.9375rem;
+  color: var(--text-muted);
+  margin: 0 0 0.75rem 0;
+}
+
+.playstore-selected__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
+}
+
+.playstore-selected__installs,
+.playstore-selected__category {
+  font-size: 0.8125rem;
+  color: var(--text-secondary);
+  background: var(--bg-card);
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+}
+
+.playstore-selected__description {
+  margin-bottom: 1rem;
+}
+
+.playstore-selected__description h5 {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 0.75rem 0;
+}
+
+.playstore-selected__description p {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin: 0;
+}
+
+.playstore-selected__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--accent-primary);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.playstore-selected__link:hover {
+  color: var(--accent-secondary);
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .app {
@@ -2372,5 +2736,19 @@ input[type="text"]::placeholder {
   
   .protection-coverage__visual {
     flex-direction: column;
+  }
+  
+  .playstore-search__grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .playstore-selected__app {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  
+  .playstore-selected__meta {
+    justify-content: center;
   }
 }

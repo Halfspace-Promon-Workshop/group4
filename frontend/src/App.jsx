@@ -4,6 +4,7 @@ import Header from './components/Header'
 import InputSelector from './components/InputSelector'
 import DescriptionInput from './components/DescriptionInput'
 import APKUpload from './components/APKUpload'
+import PlayStoreSearch from './components/PlayStoreSearch'
 import RoleSelector from './components/RoleSelector'
 import AnalysisProgress from './components/AnalysisProgress'
 import SecurityBrief from './components/SecurityBrief'
@@ -17,6 +18,7 @@ function MainApp() {
   const [description, setDescription] = useState('')
   const [appName, setAppName] = useState('')
   const [apkFile, setApkFile] = useState(null)
+  const [selectedPlayStoreApp, setSelectedPlayStoreApp] = useState(null)
   const [targetAudience, setTargetAudience] = useState('sales')
   const [isAnalyzing, setIsAnalyzing] = useState(false)
   const [stages, setStages] = useState([])
@@ -70,8 +72,15 @@ function MainApp() {
       
       if (inputMode === 'description') {
         response = await analyzeDescription(description, appName || undefined, targetAudience)
-      } else {
+      } else if (inputMode === 'apk') {
         response = await analyzeAPK(apkFile, appName || undefined, targetAudience)
+      } else if (inputMode === 'search' && selectedPlayStoreApp) {
+        // Use the Play Store app's description for analysis
+        response = await analyzeDescription(
+          selectedPlayStoreApp.description,
+          selectedPlayStoreApp.title,
+          targetAudience
+        )
       }
       
       await stagePromise
@@ -94,7 +103,9 @@ function MainApp() {
 
   const canAnalyze = inputMode === 'description' 
     ? description.trim().length >= 50 
-    : apkFile !== null
+    : inputMode === 'apk'
+    ? apkFile !== null
+    : selectedPlayStoreApp !== null
 
   const handleReset = () => {
     setResult(null)
@@ -152,12 +163,21 @@ function MainApp() {
                 canAnalyze={canAnalyze}
                 isAnalyzing={isAnalyzing}
               />
-            ) : (
+            ) : inputMode === 'apk' ? (
               <APKUpload
                 file={apkFile}
                 onFileChange={setApkFile}
                 appName={appName}
                 onAppNameChange={setAppName}
+                onAnalyze={handleAnalyze}
+                canAnalyze={canAnalyze}
+                isAnalyzing={isAnalyzing}
+              />
+            ) : (
+              <PlayStoreSearch
+                selectedApp={selectedPlayStoreApp}
+                setSelectedApp={setSelectedPlayStoreApp}
+                onAppSelect={(app) => setSelectedPlayStoreApp(app)}
                 onAnalyze={handleAnalyze}
                 canAnalyze={canAnalyze}
                 isAnalyzing={isAnalyzing}

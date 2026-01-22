@@ -1,7 +1,7 @@
 """Configuration settings for the Threat Translator backend."""
 
 from pydantic_settings import BaseSettings
-from typing import Literal
+from typing import Literal, Optional
 import os
 
 
@@ -30,6 +30,50 @@ class Settings(BaseSettings):
     class Config:
         env_file = ".env"
         env_file_encoding = "utf-8"
+    
+    def get_available_providers(self) -> list[dict]:
+        """Get list of AI providers that have API keys configured."""
+        providers = []
+        
+        if self.openai_api_key:
+            providers.append({
+                "id": "openai",
+                "name": "OpenAI",
+                "model": self.openai_model,
+                "is_default": self.ai_provider == "openai"
+            })
+        
+        if self.anthropic_api_key:
+            providers.append({
+                "id": "anthropic", 
+                "name": "Anthropic Claude",
+                "model": self.anthropic_model,
+                "is_default": self.ai_provider == "anthropic"
+            })
+        
+        if self.google_api_key:
+            providers.append({
+                "id": "google",
+                "name": "Google Gemini",
+                "model": self.google_model,
+                "is_default": self.ai_provider == "google"
+            })
+        
+        return providers
+    
+    def get_default_provider(self) -> Optional[str]:
+        """Get the default provider (first available if configured default is not available)."""
+        providers = self.get_available_providers()
+        if not providers:
+            return None
+        
+        # Try to return the configured default
+        for p in providers:
+            if p["is_default"]:
+                return p["id"]
+        
+        # Fall back to first available
+        return providers[0]["id"]
 
 
 settings = Settings()

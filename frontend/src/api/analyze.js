@@ -7,14 +7,16 @@ const API_BASE = '/api'
  * @param {string} description - App description text
  * @param {string} [appName] - Optional app name
  * @param {string} [targetAudience] - Target audience (technical/executive/sales/compliance)
+ * @param {string} [aiProvider] - AI provider to use (openai/anthropic/google)
  * @returns {Promise<Object>} Security brief response
  */
-export async function analyzeDescription(description, appName, targetAudience = 'sales') {
+export async function analyzeDescription(description, appName, targetAudience = 'sales', aiProvider = null) {
   const response = await axios.post(`${API_BASE}/analyze/description`, {
     description,
     app_name: appName,
     platform: 'Android',
-    target_audience: targetAudience
+    target_audience: targetAudience,
+    ai_provider: aiProvider
   })
   return response.data
 }
@@ -24,15 +26,19 @@ export async function analyzeDescription(description, appName, targetAudience = 
  * @param {File} file - APK file
  * @param {string} [appName] - Optional app name override
  * @param {string} [targetAudience] - Target audience (technical/executive/sales/compliance)
+ * @param {string} [aiProvider] - AI provider to use (openai/anthropic/google)
  * @returns {Promise<Object>} Security brief response
  */
-export async function analyzeAPK(file, appName, targetAudience = 'sales') {
+export async function analyzeAPK(file, appName, targetAudience = 'sales', aiProvider = null) {
   const formData = new FormData()
   formData.append('file', file)
   if (appName) {
     formData.append('app_name', appName)
   }
   formData.append('target_audience', targetAudience)
+  if (aiProvider) {
+    formData.append('ai_provider', aiProvider)
+  }
   
   const response = await axios.post(`${API_BASE}/analyze/apk`, formData, {
     headers: {
@@ -66,6 +72,15 @@ export async function getAPKMetadata(file) {
  */
 export async function checkHealth() {
   const response = await axios.get(`${API_BASE}/health`)
+  return response.data
+}
+
+/**
+ * Get available AI providers
+ * @returns {Promise<Object>} Object with providers array and default provider
+ */
+export async function getAIProviders() {
+  const response = await axios.get(`${API_BASE}/providers`)
   return response.data
 }
 

@@ -164,6 +164,33 @@ class PlayStoreService:
                 pass  # Fall through to regular search
         
         loop = asyncio.get_event_loop()
+        apps = []
+        
+        # For simple queries (single word, no spaces), try direct package lookup first
+        # This helps find apps like "Discord" -> com.discord
+        query_clean = query.strip().lower()
+        if ' ' not in query_clean and len(query_clean) >= 3:
+            package_patterns = [
+                f"com.{query_clean}",
+                f"com.{query_clean}.android",
+            ]
+            for pattern in package_patterns:
+                try:
+                    details = await cls.get_app_details(pattern, lang, country)
+                    if details.app_id and details.title:
+                        apps.append(PlayStoreAppSummary(
+                            app_id=details.app_id,
+                            title=details.title,
+                            developer=details.developer,
+                            icon=details.icon,
+                            score=details.score,
+                            price=details.price,
+                            free=details.free,
+                            summary=details.summary
+                        ))
+                        break  # Found the main app, stop trying patterns
+                except Exception:
+                    continue
         
         # Try regular search
         results = await loop.run_in_executor(
@@ -171,15 +198,18 @@ class PlayStoreService:
             lambda: cls._search_sync(query, limit * 2, lang, country)  # Request more to account for filtering
         )
         
-        apps = []
+        # Track app IDs we've already added to avoid duplicates
+        seen_app_ids = {app.app_id for app in apps}
+        
         for item in results:
             if len(apps) >= limit:
                 break
             # Skip items without a valid app_id
             app_id = item.get("appId")
-            if not app_id:
+            if not app_id or app_id in seen_app_ids:
                 continue
-                
+            
+            seen_app_ids.add(app_id)
             apps.append(PlayStoreAppSummary(
                 app_id=app_id,
                 title=item.get("title") or "",
@@ -191,7 +221,7 @@ class PlayStoreService:
                 summary=item.get("summary")
             ))
         
-        # If no results, try searching with " app" suffix (helps with some queries)
+        # If still no results, try searching with " app" suffix as last resort
         if not apps and len(query) > 1:
             try:
                 results = await loop.run_in_executor(
@@ -202,8 +232,9 @@ class PlayStoreService:
                     if len(apps) >= limit:
                         break
                     app_id = item.get("appId")
-                    if not app_id:
+                    if not app_id or app_id in seen_app_ids:
                         continue
+                    seen_app_ids.add(app_id)
                     apps.append(PlayStoreAppSummary(
                         app_id=app_id,
                         title=item.get("title") or "",

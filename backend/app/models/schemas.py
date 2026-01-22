@@ -27,6 +27,7 @@ class DescriptionAnalysisRequest(BaseModel):
     app_name: Optional[str] = Field(None, description="Optional app name")
     platform: Optional[str] = Field("Android", description="Target platform")
     target_audience: Optional[TargetAudience] = Field(TargetAudience.SALES, description="Target audience for the report")
+    ai_provider: Optional[str] = Field(None, description="AI provider to use (openai/anthropic/google)")
 
 
 class InferredCapability(BaseModel):

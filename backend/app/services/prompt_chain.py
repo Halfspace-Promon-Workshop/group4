@@ -30,13 +30,19 @@ class PromptChain:
         {"stage": 4, "name": "Generating Security Brief"},
     ]
     
-    def __init__(self, ai_service: Optional[AIService] = None):
+    def __init__(self, ai_service: Optional[AIService] = None, provider: Optional[str] = None):
         """Initialize the prompt chain.
         
         Args:
-            ai_service: Optional AI service instance. If not provided, uses the default.
+            ai_service: Optional AI service instance. If not provided, creates one.
+            provider: Optional provider name (openai/anthropic/google). If not provided, uses default.
         """
-        self.ai_service = ai_service or get_ai_service()
+        if ai_service:
+            self.ai_service = ai_service
+        elif provider:
+            self.ai_service = AIService(provider=provider)
+        else:
+            self.ai_service = get_ai_service()
         self.stages: list[AnalysisStage] = []
         self._progress_callback: Optional[Callable[[AnalysisStage], None]] = None
     

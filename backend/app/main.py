@@ -35,6 +35,17 @@ async def health_check():
     }
 
 
+@app.get("/api/providers")
+async def get_providers():
+    """Get available AI providers based on configured API keys."""
+    providers = settings.get_available_providers()
+    default = settings.get_default_provider()
+    return {
+        "providers": providers,
+        "default": default
+    }
+
+
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host=settings.api_host, port=settings.api_port)

@@ -6,6 +6,7 @@ import DescriptionInput from './components/DescriptionInput'
 import APKUpload from './components/APKUpload'
 import PlayStoreSearch from './components/PlayStoreSearch'
 import RoleSelector from './components/RoleSelector'
+import AIProviderSelector from './components/AIProviderSelector'
 import AnalysisProgress from './components/AnalysisProgress'
 import SecurityBrief from './components/SecurityBrief'
 import AnalysisHistory from './components/AnalysisHistory'
@@ -20,6 +21,7 @@ function MainApp() {
   const [apkFile, setApkFile] = useState(null)
   const [selectedPlayStoreApp, setSelectedPlayStoreApp] = useState(null)
   const [targetAudience, setTargetAudience] = useState('sales')
+  const [aiProvider, setAiProvider] = useState(null)
   const [isAnalyzing, setIsAnalyzing] = useState(false)
   const [stages, setStages] = useState([])
   const [result, setResult] = useState(null)
@@ -71,15 +73,16 @@ function MainApp() {
       const stagePromise = simulateStages()
       
       if (inputMode === 'description') {
-        response = await analyzeDescription(description, appName || undefined, targetAudience)
+        response = await analyzeDescription(description, appName || undefined, targetAudience, aiProvider)
       } else if (inputMode === 'apk') {
-        response = await analyzeAPK(apkFile, appName || undefined, targetAudience)
+        response = await analyzeAPK(apkFile, appName || undefined, targetAudience, aiProvider)
       } else if (inputMode === 'search' && selectedPlayStoreApp) {
         // Use the Play Store app's description for analysis
         response = await analyzeDescription(
           selectedPlayStoreApp.description,
           selectedPlayStoreApp.title,
-          targetAudience
+          targetAudience,
+          aiProvider
         )
       }
       
@@ -87,6 +90,9 @@ function MainApp() {
       
       setStages(prev => prev.map(s => ({ ...s, status: 'completed' })))
       setResult(response)
+      
+      // Scroll to top to show results
+      window.scrollTo(0, 0)
       
       // Save to history
       saveAnalysis(response)
@@ -130,6 +136,15 @@ function MainApp() {
       
       {!result && (
         <>
+          {/* AI Provider Selector */}
+          <div className="ai-provider-container">
+            <AIProviderSelector
+              value={aiProvider}
+              onChange={setAiProvider}
+              disabled={isAnalyzing}
+            />
+          </div>
+          
           {/* History Button */}
           {hasHistory && (
             <div className="history-button-container">

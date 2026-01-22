@@ -27,9 +27,10 @@ async def analyze_description(request: DescriptionAnalysisRequest):
         app_name = request.app_name or "Mobile Application"
         platform = request.platform or "Android"
         target_audience = request.target_audience or "sales"
+        ai_provider = request.ai_provider
         
         # Run the prompt chain
-        chain = PromptChain()
+        chain = PromptChain(provider=ai_provider)
         result = await chain.analyze(
             app_name=app_name,
             platform=platform,
@@ -50,7 +51,8 @@ async def analyze_description(request: DescriptionAnalysisRequest):
 async def analyze_apk(
     file: UploadFile = File(..., description="APK file to analyze"),
     app_name: Optional[str] = Form(None, description="Override app name"),
-    target_audience: Optional[str] = Form("sales", description="Target audience for the report")
+    target_audience: Optional[str] = Form("sales", description="Target audience for the report"),
+    ai_provider: Optional[str] = Form(None, description="AI provider to use (openai/anthropic/google)")
 ):
     """Analyze an Android app from its APK file.
     
@@ -83,7 +85,7 @@ async def analyze_apk(
         final_app_name = app_name or metadata.app_name
         
         # Run the prompt chain
-        chain = PromptChain()
+        chain = PromptChain(provider=ai_provider)
         result = await chain.analyze(
             app_name=final_app_name,
             platform="Android",

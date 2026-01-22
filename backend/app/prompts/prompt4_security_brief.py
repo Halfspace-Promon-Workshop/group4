@@ -82,6 +82,28 @@ AUDIENCE_GUIDELINES = {
 FINANCIAL_IMPACT_DATA = """
 ## Mobile Security Financial Impact Data (Use these statistics)
 
+### CRITICAL: Financial Calculation Method
+**ALWAYS calculate financial impact as a percentage of company revenue/value:**
+- Use 1-5% of estimated annual revenue as the risk exposure range
+- For well-known companies, research their approximate revenue:
+  - Netflix: ~$33B revenue → risk exposure: $330M - $1.65B (use $500M-$800M)
+  - Spotify: ~$14B revenue → risk exposure: $140M - $700M (use $200M-$400M)
+  - Instagram/Facebook: ~$120B revenue → risk exposure: $1.2B - $6B (use $2B-$3B)
+  - Discord: ~$500M revenue → risk exposure: $5M - $25M (use $10M-$15M)
+  - Uber: ~$37B revenue → risk exposure: $370M - $1.85B (use $500M-$900M)
+  - Banking apps (large): ~$10B+ revenue → risk exposure: $100M - $500M
+  - Banking apps (medium): ~$1B revenue → risk exposure: $10M - $50M
+- For unknown companies, estimate based on app category:
+  - Enterprise/B2B apps: $5M - $50M annual risk
+  - Consumer fintech: $10M - $100M annual risk
+  - E-commerce: $5M - $30M annual risk
+  - Social/Entertainment: $2M - $20M annual risk
+  - Healthcare: $10M - $50M annual risk
+  - Gaming: $1M - $10M annual risk
+  - Utility apps: $500K - $5M annual risk
+
+**Be consistent: Same company = Same approximate financial figures**
+
 ### Industry Breach Costs (IBM Cost of a Data Breach Report 2024)
 - Average cost of a data breach: $4.88 million globally
 - Average cost in financial services: $6.08 million
@@ -94,19 +116,19 @@ FINANCIAL_IMPACT_DATA = """
 - Account takeover fraud: $11 billion annually
 - Credential stuffing attacks: $5 billion in losses yearly
 
-### Cost Categories to Include
-1. **Direct Financial Loss**: Fraud, theft, ransomware payments
-2. **Regulatory Fines**: GDPR (up to €20M or 4% revenue), PCI-DSS ($5K-$100K/month)
-3. **Remediation Costs**: Incident response, forensics, system rebuilding
-4. **Reputation Damage**: Customer churn (avg 3.4% after breach), brand value loss
-5. **Operational Disruption**: Downtime costs, employee productivity loss
-6. **Legal Costs**: Lawsuits, settlements, legal fees
+### Cost Categories to Include (as % of total risk)
+1. **Direct Financial Loss** (30-40%): Fraud, theft, ransomware payments
+2. **Regulatory Fines** (15-25%): GDPR (up to €20M or 4% revenue), PCI-DSS ($5K-$100K/month)
+3. **Remediation Costs** (10-15%): Incident response, forensics, system rebuilding
+4. **Reputation Damage** (20-30%): Customer churn (avg 3.4% after breach), brand value loss
+5. **Operational Disruption** (5-10%): Downtime costs, employee productivity loss
+6. **Legal Costs** (5-10%): Lawsuits, settlements, legal fees
 
 ### ROI Calculation Framework
 - Average app protection investment: $50K - $200K annually
-- Average breach cost prevention: $1M - $10M+
-- Typical ROI: 5x - 50x investment
-- Payback period: Often < 6 months after first prevented attack
+- Typical protection reduces risk by: 70-85%
+- Typical ROI: 10x - 100x investment (based on company size)
+- Payback period: Often < 3 months after implementation
 
 ### Promon Value Propositions (Financial)
 - Prevent reverse engineering → Protect competitive advantage worth millions
